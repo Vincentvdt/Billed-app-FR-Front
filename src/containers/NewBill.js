@@ -25,7 +25,9 @@ export default class NewBill {
         const allowedExtensions = ['jpg', 'jpeg', 'png'];
 
         if (!allowedExtensions.includes(fileExtension)) {
+            console.log(fileExtension)
             console.error("Invalid file type. Only image files are allowed (jpg, jpeg, png).");
+            // error msg
             this.document.querySelector(`input[data-testid="file"]`).value = "";
             return;
         }
