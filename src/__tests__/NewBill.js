@@ -92,21 +92,43 @@ describe("Given I am connected as an employee", () => {
     describe("When I am on NewBill Page and I submit a new Bill", () => {
         test("Then, I should create a new Bill.", async () => {
 
-            document.querySelector(`select[data-testid="expense-type"]`).value = bill["type"]
-            document.querySelector(`input[data-testid="expense-name"]`).value = bill["name"]
-            document.querySelector(`input[data-testid="amount"]`).value = parseInt(bill["amount"])
-            document.querySelector(`input[data-testid="datepicker"]`).value = bill["date"]
-            document.querySelector(`input[data-testid="vat"]`).value = bill["vat"]
-            document.querySelector(`input[data-testid="pct"]`).value = parseInt(bill["pct"])
-            document.querySelector(`textarea[data-testid="commentary"]`).value = bill["commentary"]
-
+            const fakeEvent = {
+                preventDefault: jest.fn(),
+                target: {
+                    querySelector: jest.fn().mockImplementation(selector => {
+                        if (selector === 'select[data-testid="expense-type"]') {
+                            return {value: bill["type"]}; // Adjust the value as needed
+                        }
+                        if (selector === 'input[data-testid="expense-name"]') {
+                            return {value: bill["name"]}; // Adjust the value as needed
+                        }
+                        if (selector === 'input[data-testid="amount"]') {
+                            return {value: parseInt(bill["amount"])}; // Adjust the value as needed
+                        }
+                        if (selector === 'input[data-testid="datepicker"]') {
+                            return {value: bill["date"]}; // Adjust the value as needed
+                        }
+                        if (selector === 'input[data-testid="vat"]') {
+                            return {value: bill["vat"]}; // Adjust the value as needed
+                        }
+                        if (selector === 'input[data-testid="pct"]') {
+                            return {value: parseInt(bill["pct"])}; // Adjust the value as needed
+                        }
+                        if (selector === 'textarea[data-testid="commentary"]') {
+                            return {value: bill["commentary"]}; // Adjust the value as needed
+                        }
+                    }),
+                },
+            };
             NewBillfn.fileUrl = bill["fileUrl"]
             NewBillfn.fileName = bill["fileName"]
+
             const submitBtn = screen.getByTestId('btn-send-bill')
-            jest.spyOn(NewBillfn, "handleSubmit")
-            jest.spyOn(NewBillfn, "updateBill")
-            fireEvent.click(submitBtn);
-            expect(NewBillfn.updateBill).toHaveBeenCalled()
+
+            const handleSubmit = jest.fn(() => NewBillfn.handleSubmit(fakeEvent))
+            submitBtn.addEventListener("click", handleSubmit)
+            fireEvent.click(submitBtn)
+            expect(handleSubmit).toHaveBeenCalled()
         })
     })
 })

@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "test": "jest --coverage --noStackTrace --silent",
-    "debug": "npx live-server"
+    "test": "jest --coverage --noStackTrace --silent"
   },
   "jest": {
     "verbose": false,
